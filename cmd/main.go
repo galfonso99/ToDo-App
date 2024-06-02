@@ -46,6 +46,11 @@ func main() {
 			PasswordHash: passwordhash,
 		},
 	)
+	taskStore := dbstore.NewTaskStore(
+		dbstore.NewTaskStoreParams{
+			DB:           db,
+		},
+	)
 
 	sessionStore := dbstore.NewSessionStore(
 		dbstore.NewSessionStoreParams{
@@ -76,6 +81,10 @@ func main() {
 
 		r.Post("/register", handlers.NewPostRegisterHandler(handlers.PostRegisterHandlerParams{
 			UserStore: userStore,
+		}).ServeHTTP)
+
+		r.Post("/task", handlers.NewPostTaskHandler(handlers.PostTaskHandlerParams{
+			TaskStore: taskStore,
 		}).ServeHTTP)
 
 		r.Get("/login", handlers.NewGetLoginHandler().ServeHTTP)

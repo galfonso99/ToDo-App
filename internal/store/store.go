@@ -6,6 +6,11 @@ type User struct {
 	Password string `json:"-"`
 }
 
+type Task struct {
+	ID       uint   `gorm:"primaryKey" json:"id"`
+	Description    string `json:"Description"`
+}
+
 type Session struct {
 	ID        uint   `gorm:"primaryKey" json:"id"`
 	SessionID string `json:"session_id"`
@@ -14,8 +19,13 @@ type Session struct {
 }
 
 type UserStore interface {
-	CreateUser(email string, password string) error
+	CreateUser(description string, password string) error
 	GetUser(email string) (*User, error)
+}
+
+type TaskStore interface {
+	CreateTask(description string) error
+	GetTask(description string) (*Task, error)
 }
 
 type SessionStore interface {
