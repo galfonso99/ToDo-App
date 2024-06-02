@@ -1,8 +1,8 @@
 package handlers
 
 import (
-	"goth/internal/middleware"
-	"goth/internal/store"
+	// "goth/internal/middleware"
+	// "goth/internal/store"
 	"goth/internal/templates"
 	"net/http"
 )
@@ -15,22 +15,8 @@ func NewHomeHandler() *HomeHandler {
 
 func (h *HomeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
-	user, ok := r.Context().Value(middleware.UserKey).(*store.User)
-
-	if !ok {
-		c := templates.GuestIndex()
-		err := templates.Layout(c, "My website").Render(r.Context(), w)
-
-		if err != nil {
-			http.Error(w, "Error rendering template", http.StatusInternalServerError)
-			return
-		}
-
-		return
-	}
-
-	c := templates.Index(user.Email)
-	err := templates.Layout(c, "My website").Render(r.Context(), w)
+	c := templates.Home()
+	err := templates.Layout(c, "ToDo App").Render(r.Context(), w)
 
 	if err != nil {
 		http.Error(w, "Error rendering template", http.StatusInternalServerError)

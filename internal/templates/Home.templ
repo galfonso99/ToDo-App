@@ -1,0 +1,27 @@
+package templates
+
+templ todo(id string, task string) {
+    <div class="flex flex-row items-center py-1">
+        <input class="" type="checkbox" id={"todo-"+id} name={"todo"+id} value="todo">
+        <div class="px-4"> { task } </div>
+        delete_icon
+    </div>
+}
+templ Home() {
+		<div class="">
+        <h1 class="text-3xl"> TODO LIST </h1> 
+        @todo("1", "Shower")
+        @todo("2", "Brush Teeth")
+        @todo("3", "Stretch")
+        <br>
+        <h3> Add Task </h3> <br>
+         <form>
+            <input class="py-0 px-0" type="text" id="task-input" name="input">
+            <button class="bg-blue-500 text-white py-2 px-5 my-5 mx-3 rounded-lg" >
+            <input type="submit" value="Submit">
+            </button>
+        </form>
+		</div>
+
+}
+
