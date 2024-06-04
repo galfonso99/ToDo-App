@@ -19,13 +19,14 @@ type Session struct {
 }
 
 type UserStore interface {
-	CreateUser(description string, password string) error
+	CreateUser(email string, password string) error
 	GetUser(email string) (*User, error)
 }
 
 type TaskStore interface {
-	CreateTask(description string) error
-	GetTask(description string) (*Task, error)
+	CreateTask(description string) (uint, error)
+	GetTask(ID uint) (*Task, error)
+	GetAllTasks() ([]Task, error)
 }
 
 type SessionStore interface {

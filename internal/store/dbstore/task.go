@@ -22,20 +22,34 @@ func NewTaskStore(params NewTaskStoreParams) *TaskStore {
 	}
 }
 
-func (s *TaskStore) CreateTask(task string) error {
-	return s.db.Create(&store.Task{
-		Description:    task,
-	}).Error
+func (s *TaskStore) CreateTask(description string) (uint, error) {
+    task := store.Task {
+        Description: description,
+    }
+    result := s.db.Create(&task)
+    err := result.Error
+    return task.ID, err
 }
 
-func (s *TaskStore) GetTask(email string) (*store.Task, error) {
+func (s *TaskStore) GetTask(ID uint) (*store.Task, error) {
 
-	var user store.Task
-	err := s.db.Where("email = ?", email).First(&user).Error
+	var task store.Task
+	err := s.db.Where("ID = ?", ID).First(&task).Error
 
 	if err != nil {
 		return nil, err
 	}
-	return &user, err
+	return &task, err
+}
+
+func (s *TaskStore) GetAllTasks() ([]store.Task, error) {
+    var tasks  []store.Task
+	result := s.db.Find(&tasks)
+    err := result.Error
+
+	if err != nil {
+		return nil, err
+	}
+	return tasks, err
 }
 

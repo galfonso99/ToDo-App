@@ -73,7 +73,11 @@ func main() {
 
 		r.NotFound(handlers.NewNotFoundHandler().ServeHTTP)
 
-		r.Get("/", handlers.NewHomeHandler().ServeHTTP)
+		r.Get("/", handlers.NewHomeHandler(handlers.HomeHandlerParams{
+            TaskStore: taskStore,
+        }).ServeHTTP)
+
+		r.Get("/dashboard", handlers.NewDashboardHandler().ServeHTTP)
 
 		r.Get("/about", handlers.NewAboutHandler().ServeHTTP)
 
@@ -83,7 +87,7 @@ func main() {
 			UserStore: userStore,
 		}).ServeHTTP)
 
-		r.Post("/task", handlers.NewPostTaskHandler(handlers.PostTaskHandlerParams{
+		r.Post("/todos", handlers.NewPostTaskHandler(handlers.PostTaskHandlerParams{
 			TaskStore: taskStore,
 		}).ServeHTTP)
 

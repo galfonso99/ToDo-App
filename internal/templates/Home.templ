@@ -1,10 +1,15 @@
 package templates
 
+import (
+    "goth/internal/store"
+    "strconv"
+)
+
 templ todo(id string, task string) {
-    <div class="flex flex-row items-center py-1">
+    <div class="flex flex-row py-1 min-w-[55vw] max-w-[55vw] content-center items-center align-center">
         <input class="" type="checkbox" id={"todo-"+id} name={"todo"+id} value="todo">
         <div class="px-4"> { task } </div>
-        delete_icon
+        🗑
     </div>
 }
 
@@ -12,25 +17,42 @@ templ TaskSuccess(desc string) {
     @todo("4", desc)
 }
 
+templ Task(ID uint, desc string) {
+    <div id="todos" hx-swap-oob="beforeend">
+        @todo(strconv.FormatUint(uint64(ID), 10), desc)
+    </div>
+}
+
 templ TaskError() {
 }
 
-templ Home() {
-		<div class="">
-            <h1 class="text-3xl"> TODO LIST </h1> 
-            @todo("1", "Shower")
-            @todo("2", "Brush Teeth")
-            @todo("3", "Stretch")
-            <br>
-            <br>
-            <h3> Add Task </h3>
-            <form>
-                <input class="py-0 px-0" type="text" id="task-input" name="input">
-                <button class="bg-blue-500 text-white py-2 px-5 my-5 mx-3 rounded-lg" >
-                    <input type="submit" value="Submit">
-                </button>
-            </form>
+templ Form() {
+    <form hx-swap="outerHTML" hx-post="/todos">
+        <input class="py-3 px-3 min-w-[40vw]" type="text" id="task" name="task" value="" placeholder="Enter Task">
+        <button class="bg-blue-500 text-white py-2 px-5 my-5 mx-3 rounded-lg text-lg" >
+            <input type="submit" value="Submit">
+        </button>
+    </form>
+}
+
+templ Home(tasks []store.Task) {
+    <div class="leading-3">
+		<div id="todos" class="text-3xl flex flex-col items-center content-center">
+            <h1 class="text-5xl my-5"> TODO LIST </h1> 
+            <!-- @todo("1", "Shower") --> 
+            <!-- @todo("2", "Brush Teeth")-->
+            <!-- @todo("3", "Stretch")-->
+            <!-- @todo("3", "I want to go take a massive shit right now bitch bitch bitch")-->
+            <!-- @todo("4", "We have to go get the umbrella that we left at our friend's home during Saint Patty's") -->
+            for _, task := range tasks {
+                @todo(strconv.FormatUint(uint64(task.ID), 10), task.Description)
+            }
 		</div>
+		<div class="text-3xl flex flex-col justify-center content-center items-center">
+            <h3 class="mt-12"> Add Task </h3>
+            @Form()
+        </div>
+        </div>
 
 }
 

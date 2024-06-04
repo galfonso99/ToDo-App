@@ -19,7 +19,7 @@ func (h *DashboardHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	if !ok {
 		c := templates.GuestIndex()
-		err := templates.Layout(c, "My website").Render(r.Context(), w)
+		err := templates.DashboardLayout(c, "My website").Render(r.Context(), w)
 
 		if err != nil {
 			http.Error(w, "Error rendering template", http.StatusInternalServerError)
@@ -30,7 +30,7 @@ func (h *DashboardHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	c := templates.Index(user.Email)
-	err := templates.Layout(c, "My website").Render(r.Context(), w)
+	err := templates.DashboardLayout(c, "My website").Render(r.Context(), w)
 
 	if err != nil {
 		http.Error(w, "Error rendering template", http.StatusInternalServerError)

@@ -4,6 +4,7 @@ import (
 	"goth/internal/store"
 	"goth/internal/templates"
 	"net/http"
+	// "context"
 )
 
 type PostTaskHandler struct {
@@ -21,20 +22,23 @@ func NewPostTaskHandler(params PostTaskHandlerParams) *PostTaskHandler {
 }
 
 func (h *PostTaskHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	description := r.FormValue("email")
+	description := r.FormValue("task")
 
-	err := h.taskStore.CreateTask(description)
+	ID, err := h.taskStore.CreateTask(description)
 
-	if err != nil {
+	 if err != nil {
 
-		w.WriteHeader(http.StatusBadRequest)
-		// c := templates.TaskError()
-		// c.Render(r.Context(), w)
-		return
-	}
+	 	w.WriteHeader(http.StatusBadRequest)
+	 	// c := templates.TaskError()
+	 	// c.Render(r.Context(), w)
+	 	return
+	 }
 
-	c := templates.TaskSuccess(description)
-	err = c.Render(r.Context(), w)
+	// c := templates.TaskSuccess(description)
+    newTask := templates.Task(ID, description)
+	err = newTask.Render(r.Context(), w)
+    newForm := templates.Form()
+	err = newForm.Render(r.Context(), w)
 
 	if err != nil {
 		http.Error(w, "error rendering template", http.StatusInternalServerError)

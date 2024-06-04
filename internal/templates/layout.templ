@@ -53,12 +53,30 @@ templ nav() {
 	</nav>
 }
 
+templ DashboardLayout(contents templ.Component, title string) {
+	@header(title)
+    @nav()
+	<body class="flex flex-col h-full leading-3">
+		<main class="flex-1 container ">
+			@contents
+		</main>
+	</body>
+   @footer()
+}
+
 templ Layout(contents templ.Component, title string) {
 	@header(title)
 	<body class="flex flex-col h-full leading-3">
 		<main class="flex-1 container ">
 			@contents
 		</main>
+	</body>
+}
+
+templ HomeLayout(contents templ.Component, title string) {
+	@header(title)
+	<body class="flex flex-col h-full">
+			@contents
 	</body>
 }
 
