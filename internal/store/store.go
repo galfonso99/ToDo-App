@@ -8,8 +8,7 @@ type User struct {
 
 type Task struct {
 	ID       uint   `gorm:"primaryKey" json:"id"`
-	Description    string `json:"Description"`
-}
+	Description    string `json:"Description"` }
 
 type Session struct {
 	ID        uint   `gorm:"primaryKey" json:"id"`
@@ -26,6 +25,7 @@ type UserStore interface {
 type TaskStore interface {
 	CreateTask(description string) (uint, error)
 	GetTask(ID uint) (*Task, error)
+    DeleteTask(ID uint) error
 	GetAllTasks() ([]Task, error)
 }
 

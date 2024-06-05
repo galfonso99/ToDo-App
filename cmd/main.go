@@ -91,6 +91,14 @@ func main() {
 			TaskStore: taskStore,
 		}).ServeHTTP)
 
+        r.Delete("/todos/{id}", handlers.NewDeleteTaskHandler(handlers.DeleteTaskHandlerParams{
+			TaskStore: taskStore,
+		}).ServeHTTP)
+
+        r.Put("/todos/{id}", handlers.NewDeleteTaskHandler(handlers.DeleteTaskHandlerParams{
+			TaskStore: taskStore,
+		}).ServeHTTP)
+
 		r.Get("/login", handlers.NewGetLoginHandler().ServeHTTP)
 
 		r.Post("/login", handlers.NewPostLoginHandler(handlers.PostLoginHandlerParams{

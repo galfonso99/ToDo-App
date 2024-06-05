@@ -5,16 +5,12 @@ import (
     "strconv"
 )
 
-templ todo(id string, task string) {
-    <div class="flex flex-row py-1 min-w-[55vw] max-w-[55vw] content-center items-center align-center">
-        <input class="" type="checkbox" id={"todo-"+id} name={"todo"+id} value="todo">
-        <div class="px-4"> { task } </div>
-        🗑
-    </div>
-}
 
-templ TaskSuccess(desc string) {
-    @todo("4", desc)
+// templ TaskSuccess(desc string) {
+//    @todo("4", desc)
+// }
+
+templ DeleteTask() {
 }
 
 templ Task(ID uint, desc string) {
@@ -33,6 +29,27 @@ templ Form() {
             <input type="submit" value="Submit">
         </button>
     </form>
+}
+
+templ todo(id string, task string) {
+    <div id={"todo-"+id} 
+    class="flex flex-row py-1 min-w-[55vw] max-w-[55vw] content-center items-center align-center pointer-cursor">
+        <input type="checkbox" id={"checkbox-todo-"+id} name={"todo"+id} value="todo"
+                hx-target={"#todo-text-"+id}
+        >
+        <div id={"todo-text-"+id} class="px-4"> { task } </div>
+        <div hx-target={"#todo-"+id}
+            hx-swap="outerHTML swap:500ms" 
+            hx-delete={"/todos/"+id} 
+            class="w-6"
+            style="cursor:pointer"
+            >
+                <img src="/static/img/trash.svg" alt="loading">
+        </div>
+    </div>
+    <!--The extra style tag is because cursor was finnicky in tailwind-->
+    //hx-indicator="#ci-{{ .Id }}"
+    // line-through text-gray-400
 }
 
 templ Home(tasks []store.Task) {
