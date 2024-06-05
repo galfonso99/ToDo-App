@@ -22,6 +22,26 @@ templ Task(ID uint, desc string) {
 templ TaskError() {
 }
 
+templ CompletedTodo(id string, task string) {
+        <input type="checkbox" id={"checkbox-todo-"+id} name={"todo"+id} checked="true"
+                hx-get={"todos/"+id}
+                hx-target={"#todo-"+id}
+                hx-swap="innerHTML"
+        >
+        <div id={"todo-text-"+id} 
+                    class="px-4 line-through text-gray-400"> 
+            { task } 
+        </div>
+        <div hx-target={"#todo-"+id}
+            hx-swap="outerHTML swap:500ms" 
+            hx-delete={"/todos/"+id} 
+            class="w-6"
+            style="cursor:pointer"
+            >
+                <img src="/static/img/trash.svg" alt="loading">
+        </div>
+}
+
 templ Form() {
     <form hx-swap="outerHTML" hx-post="/todos">
         <input class="py-3 px-3 min-w-[40vw]" type="text" id="task" name="task" value="" placeholder="Enter Task">
@@ -34,15 +54,14 @@ templ Form() {
 templ todo(id string, task string) {
     <div id={"todo-"+id} 
     class="flex flex-row py-1 min-w-[55vw] max-w-[55vw] content-center items-center align-center pointer-cursor">
-        <input type="checkbox" id={"checkbox-todo-"+id} name={"todo"+id} value="todo"
-                hx-target={"#todo-text-"+id}
+        <input type="checkbox" id={"checkbox-todo-"+id} name={"todo"+id}
         >
         <div id={"todo-text-"+id} class="px-4"> { task } </div>
         <div hx-target={"#todo-"+id}
             hx-swap="outerHTML swap:500ms" 
             hx-delete={"/todos/"+id} 
-            class="w-6"
-            style="cursor:pointer"
+            class="w-6 shrink-0"
+            style="cursor:pointer,"
             >
                 <img src="/static/img/trash.svg" alt="loading">
         </div>
@@ -50,6 +69,9 @@ templ todo(id string, task string) {
     <!--The extra style tag is because cursor was finnicky in tailwind-->
     //hx-indicator="#ci-{{ .Id }}"
     // line-through text-gray-400
+                //hx-get={"todos/"+id+"/complete"}
+                //hx-target={"#todo-"+id}
+                //hx-swap="innerHTML"
 }
 
 templ Home(tasks []store.Task) {

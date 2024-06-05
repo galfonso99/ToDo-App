@@ -34,3 +34,9 @@ func (m *SessionStoreMock) GetUserFromSession(sessionID string, userID string) (
 	args := m.Called(sessionID, userID)
 	return args.Get(0).(*store.User), args.Error(1)
 }
+
+// func (m *SessionStoreMock) GetTasksFromSession(sessionID string) ([]store.Task, error) {
+// 	// args := m.Called(sessionID, userID)
+// 	// return args.Get(0).(*store.User), args.Error(1)
+//     return nil, nil
+// }

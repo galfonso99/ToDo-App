@@ -5,7 +5,7 @@ import (
 	"errors"
 	"goth/internal/config"
 	"goth/internal/handlers"
-	"goth/internal/hash/passwordhash"
+	// "goth/internal/hash/passwordhash"
 	database "goth/internal/store/db"
 	"goth/internal/store/dbstore"
 	"log/slog"
@@ -38,14 +38,7 @@ func main() {
 	cfg := config.MustLoadConfig()
 
 	db := database.MustOpen(cfg.DatabaseName)
-	passwordhash := passwordhash.NewHPasswordHash()
 
-	userStore := dbstore.NewUserStore(
-		dbstore.NewUserStoreParams{
-			DB:           db,
-			PasswordHash: passwordhash,
-		},
-	)
 	taskStore := dbstore.NewTaskStore(
 		dbstore.NewTaskStoreParams{
 			DB:           db,
@@ -71,20 +64,12 @@ func main() {
 			authMiddleware.AddUserToContext,
 		)
 
-		r.NotFound(handlers.NewNotFoundHandler().ServeHTTP)
-
 		r.Get("/", handlers.NewHomeHandler(handlers.HomeHandlerParams{
             TaskStore: taskStore,
         }).ServeHTTP)
 
-		r.Get("/dashboard", handlers.NewDashboardHandler().ServeHTTP)
-
-		r.Get("/about", handlers.NewAboutHandler().ServeHTTP)
-
-		r.Get("/register", handlers.NewGetRegisterHandler().ServeHTTP)
-
-		r.Post("/register", handlers.NewPostRegisterHandler(handlers.PostRegisterHandlerParams{
-			UserStore: userStore,
+        r.Get("/todos/{id}/complete", handlers.NewGetTaskCompleteHandler(handlers.GetTaskCompleteHandlerParams{
+			TaskStore: taskStore,
 		}).ServeHTTP)
 
 		r.Post("/todos", handlers.NewPostTaskHandler(handlers.PostTaskHandlerParams{
@@ -99,18 +84,6 @@ func main() {
 			TaskStore: taskStore,
 		}).ServeHTTP)
 
-		r.Get("/login", handlers.NewGetLoginHandler().ServeHTTP)
-
-		r.Post("/login", handlers.NewPostLoginHandler(handlers.PostLoginHandlerParams{
-			UserStore:         userStore,
-			SessionStore:      sessionStore,
-			PasswordHash:      passwordhash,
-			SessionCookieName: cfg.SessionCookieName,
-		}).ServeHTTP)
-
-		r.Post("/logout", handlers.NewPostLogoutHandler(handlers.PostLogoutHandlerParams{
-			SessionCookieName: cfg.SessionCookieName,
-		}).ServeHTTP)
 	})
 
 	killSig := make(chan os.Signal, 1)

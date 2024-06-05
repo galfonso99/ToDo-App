@@ -32,4 +32,5 @@ type TaskStore interface {
 type SessionStore interface {
 	CreateSession(session *Session) (*Session, error)
 	GetUserFromSession(sessionID string, userID string) (*User, error)
+    // GetTasksFromSession(sessionID string) ([]Task, error)
 }
