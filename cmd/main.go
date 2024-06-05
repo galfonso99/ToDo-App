@@ -95,7 +95,7 @@ func main() {
 			TaskStore: taskStore,
 		}).ServeHTTP)
 
-        r.Put("/todos/{id}", handlers.NewDeleteTaskHandler(handlers.DeleteTaskHandlerParams{
+        r.Put("/todos/{id}", handlers.NewPutTaskHandler(handlers.PutTaskHandlerParams{
 			TaskStore: taskStore,
 		}).ServeHTTP)
 
