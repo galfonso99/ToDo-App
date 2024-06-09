@@ -47,6 +47,11 @@ func (s *TaskStore) DeleteTask(ID uint) error {
 	return err
 }
 
+func (s *TaskStore) EditTask(ID uint, desc string) error {
+    err := s.db.Save(&store.Task{ID: ID, Description: desc}).Error
+	return err
+}
+
 func (s *TaskStore) GetAllTasks() ([]store.Task, error) {
     var tasks  []store.Task
 	result := s.db.Find(&tasks)

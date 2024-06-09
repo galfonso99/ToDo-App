@@ -4,7 +4,7 @@ import (
 	"goth/internal/store"
 	"goth/internal/templates"
 	"net/http"
-	// "context"
+	"strconv"
 )
 
 type PostTaskHandler struct {
@@ -33,9 +33,9 @@ func (h *PostTaskHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	 	// c.Render(r.Context(), w)
 	 	return
 	 }
-
+    id := strconv.FormatUint(uint64(ID), 10)
 	// c := templates.TaskSuccess(description)
-    newTask := templates.Task(ID, description)
+    newTask := templates.Task(id, description)
 	err = newTask.Render(r.Context(), w)
     newForm := templates.Form()
 	err = newForm.Render(r.Context(), w)

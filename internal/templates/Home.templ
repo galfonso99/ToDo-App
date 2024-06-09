@@ -5,46 +5,40 @@ import (
     "strconv"
 )
 
-
-// templ TaskSuccess(desc string) {
-//    @todo("4", desc)
-// }
-
 templ DeleteTask() {
 }
 
-templ Task(ID uint, desc string) {
+templ Task(id string, desc string) {
     <div id="todos" hx-swap-oob="beforeend">
-        @todo(strconv.FormatUint(uint64(ID), 10), desc)
+        @todo(id, desc)
     </div>
+}
+
+templ TaskDescription(id string, desc string) {
+        <div id={"todo-text-"+id} class="px-4 cursor-pointer"
+            hx-get={"/todos/"+id+"/edit"} hx-target="this" hx-swap="outerHTML"
+            onclick=""
+        > 
+            { desc } 
+        </div>
+
 }
 
 templ TaskError() {
 }
 
-templ CompletedTodo(id string, task string) {
-        <input type="checkbox" id={"checkbox-todo-"+id} name={"todo"+id} checked="true"
-                hx-get={"todos/"+id}
-                hx-target={"#todo-"+id}
-                hx-swap="innerHTML"
+templ TaskEditor(id string, desc string) {
+    <form class="mb-0 " hx-swap="outerHTML" hx-put={"/todos/"+id} hx-indicator={"#ci-"+id} autocomplete="off">
+        <input class="h-[35px] py-3 px-3 mx-[20px] min-w-[40vw] rounded-2xl" 
+                type="text" id="task" name="task" value={ desc } autofocus
         >
-        <div id={"todo-text-"+id} 
-                    class="px-4 line-through text-gray-400"> 
-            { task } 
-        </div>
-        <div hx-target={"#todo-"+id}
-            hx-swap="outerHTML swap:500ms" 
-            hx-delete={"/todos/"+id} 
-            class="w-6"
-            style="cursor:pointer"
-            >
-                <img src="/static/img/trash.svg" alt="loading">
-        </div>
+    </form>
+
 }
 
 templ Form() {
-    <form hx-swap="outerHTML" hx-post="/todos">
-        <input class="py-3 px-3 min-w-[40vw]" type="text" id="task" name="task" value="" placeholder="Enter Task">
+    <form hx-swap="outerHTML" hx-post="/todos" autocomplete="off">
+        <input class="py-3 px-3 min-w-[40vw]" type="text" id="task" name="task" placeholder="Enter Task">
         <button class="bg-blue-500 text-white py-2 px-5 my-5 mx-3 rounded-lg text-lg" >
             <input type="submit" value="Submit">
         </button>
@@ -53,36 +47,35 @@ templ Form() {
 
 templ todo(id string, task string) {
     <div id={"todo-"+id} 
-    class="flex flex-row py-1 min-w-[55vw] max-w-[55vw] content-center items-center align-center pointer-cursor">
-        <input type="checkbox" id={"checkbox-todo-"+id} name={"todo"+id}
-        >
-        <div id={"todo-text-"+id} class="px-4"> { task } </div>
-        <div hx-target={"#todo-"+id}
+    class="todo flex flex-row py-1 min-w-[55vw] max-w-[55vw] content-center items-center align-center text-left">
+        <input type="checkbox" id={"checkbox-todo-"+id} name={"todo"+id} >
+        <div id={"todo-text-"+id} class="px-4 cursor-pointer"
+            hx-get={"/todos/"+id+"/edit"} hx-target="this" hx-swap="outerHTML"
+            onclick=""
+        > 
+            { task }
+        </div>
+        <div id={"delete-"+id} 
+            hx-target={"#todo-"+id}
             hx-swap="outerHTML swap:500ms" 
             hx-delete={"/todos/"+id} 
-            class="w-6 shrink-0"
-            style="cursor:pointer,"
+            hx-indicator={"#ci-"+id}
+            class="w-6 shrink-0 inline-block"
+            style="cursor:pointer"
             >
-                <img src="/static/img/trash.svg" alt="loading">
+                <img src="/static/images/trash.svg" alt="loading">
+        </div>
+        <div id={"ci-"+id} class="htmx-indicator">
+            <img src="/static/images/bars.svg" alt="loading" style="width: 1rem">
         </div>
     </div>
-    <!--The extra style tag is because cursor was finnicky in tailwind-->
-    //hx-indicator="#ci-{{ .Id }}"
-    // line-through text-gray-400
-                //hx-get={"todos/"+id+"/complete"}
-                //hx-target={"#todo-"+id}
-                //hx-swap="innerHTML"
+    // The extra "style" tag is because cursor was finnicky in tailwind
 }
 
 templ Home(tasks []store.Task) {
     <div class="leading-3">
 		<div id="todos" class="text-3xl flex flex-col items-center content-center">
             <h1 class="text-5xl my-5"> TODO LIST </h1> 
-            <!-- @todo("1", "Shower") --> 
-            <!-- @todo("2", "Brush Teeth")-->
-            <!-- @todo("3", "Stretch")-->
-            <!-- @todo("3", "I want to go take a massive shit right now bitch bitch bitch")-->
-            <!-- @todo("4", "We have to go get the umbrella that we left at our friend's home during Saint Patty's") -->
             for _, task := range tasks {
                 @todo(strconv.FormatUint(uint64(task.ID), 10), task.Description)
             }
@@ -91,7 +84,6 @@ templ Home(tasks []store.Task) {
             <h3 class="mt-12"> Add Task </h3>
             @Form()
         </div>
-        </div>
-
+    </div>
 }
 

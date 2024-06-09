@@ -1,0 +1,39 @@
+package templates
+
+import (
+    // "goth/internal/store"
+    // "strconv"
+)
+
+templ TaskTemplate(id string, task string) {
+    <div id={"todo-"+id} 
+    class="flex flex-row py-1 min-w-[55vw] max-w-[55vw] content-center items-center align-center pointer-cursor">
+        <input type="checkbox" id={"checkbox-todo-"+id} name={"todo"+id}
+        >
+        <div id={"todo-text-"+id} class="px-4"> { task } </div>
+        <div id={"delete-"+id} 
+            hx-target={"#todo-"+id}
+            hx-swap="outerHTML swap:500ms" 
+            hx-delete={"/todos/"+id} 
+            hx-indicator={"#ci-"+id}
+            class="w-6 shrink-0"
+            style="cursor:pointer"
+            >
+                <img src="/static/images/trash.svg" alt="loading">
+        </div>
+        <div id={"ci-"+id} class="htmx-indicator">
+            <img src="/static/images/bars.svg" alt="loading" style="width: 1rem">
+        </div>
+    </div>
+    <!--The extra "style" tag is because cursor was finnicky in tailwind-->
+    // line-through text-gray-400
+}
+
+templ TaskPage(id string, task string) {
+    <div class="leading-3">
+		<div id="todos" class="text-3xl flex flex-col items-center content-center">
+            @TaskTemplate(id, task)
+		</div>
+    </div>
+}
+

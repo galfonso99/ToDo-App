@@ -26,6 +26,7 @@ type TaskStore interface {
 	CreateTask(description string) (uint, error)
 	GetTask(ID uint) (*Task, error)
     DeleteTask(ID uint) error
+    EditTask(ID uint, desc string) error
 	GetAllTasks() ([]Task, error)
 }
 

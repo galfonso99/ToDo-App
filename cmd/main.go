@@ -68,7 +68,11 @@ func main() {
             TaskStore: taskStore,
         }).ServeHTTP)
 
-        r.Get("/todos/{id}/complete", handlers.NewGetTaskCompleteHandler(handlers.GetTaskCompleteHandlerParams{
+        r.Get("/todos/{id}", handlers.NewGetTaskHandler(handlers.GetTaskHandlerParams{
+			TaskStore: taskStore,
+		}).ServeHTTP)
+
+        r.Get("/todos/{id}/edit", handlers.NewGetTaskEditorHandler(handlers.GetTaskEditorHandlerParams{
 			TaskStore: taskStore,
 		}).ServeHTTP)
 
@@ -80,8 +84,8 @@ func main() {
 			TaskStore: taskStore,
 		}).ServeHTTP)
 
-        r.Put("/todos/{id}", handlers.NewPutTaskHandler(handlers.PutTaskHandlerParams{
-			TaskStore: taskStore,
+		r.Put("/todos/{id}", handlers.NewPutTaskHandler(handlers.PutTaskHandlerParams{
+		    TaskStore: taskStore,
 		}).ServeHTTP)
 
 	})

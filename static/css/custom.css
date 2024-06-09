@@ -2,3 +2,25 @@
   text-decoration: line-through;
   color: #bbb;
 }
+.htmx-indicator {
+    opacity:0;
+    transition: opacity 500ms ease-in;
+}
+.htmx-request .htmx-indicator{
+    opacity:1;
+}
+.htmx-request.htmx-indicator{
+    opacity:1;
+}
+.todo.htmx-swapping {
+    opacity:0;
+    transition:opacity 500ms ease-in;
+}
+
+[id^="todo-text-"].htmx-added {
+  opacity: 0;
+}
+[id^="todo-text-"] {
+  opacity: 1;
+  transition: opacity 1s ease-out;
+}

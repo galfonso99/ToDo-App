@@ -8,16 +8,16 @@ import (
 	"strconv"
 )
 
-type GetTaskCompleteHandler struct {
+type GetTaskHandler struct {
 	taskStore store.TaskStore
 }
 
-type GetTaskCompleteHandlerParams struct {
+type GetTaskHandlerParams struct {
 	TaskStore store.TaskStore
 }
 
-func NewGetTaskCompleteHandler(params GetTaskCompleteHandlerParams) *GetTaskCompleteHandler {
-	return &GetTaskCompleteHandler{
+func NewGetTaskHandler(params GetTaskHandlerParams) *GetTaskHandler {
+	return &GetTaskHandler{
 		taskStore: params.TaskStore,
 	}
 }
@@ -29,7 +29,7 @@ func BadRequest(w http.ResponseWriter, r *http.Request) error {
         return nil
 }
 
-func (h *GetTaskCompleteHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (h *GetTaskHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
     id := chi.URLParam(r, "id")
     u64, err := strconv.ParseUint(id, 10, 32)
 
@@ -40,11 +40,14 @@ func (h *GetTaskCompleteHandler) ServeHTTP(w http.ResponseWriter, r *http.Reques
 
     if err != nil { BadRequest(w, r); return}
 
-    completedTask := templates.CompletedTodo(id, task.Description)
-	err = completedTask.Render(r.Context(), w)
+    taskPage := templates.TaskPage(id, task.Description)
+	err = templates.HomeLayout(taskPage, "ToDo App").Render(r.Context(), w)
 
 	if err != nil {
 		http.Error(w, "error rendering template", http.StatusInternalServerError)
 		return
 	}
 }
+
+
+
