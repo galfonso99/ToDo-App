@@ -37,6 +37,11 @@ func (h *PostTaskHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	// c := templates.TaskSuccess(description)
     newTask := templates.Task(id, description)
 	err = newTask.Render(r.Context(), w)
+
+	if err != nil {
+		http.Error(w, "error rendering template", http.StatusInternalServerError)
+		return
+	}
     newForm := templates.Form()
 	err = newForm.Render(r.Context(), w)
 
