@@ -1,12 +1,12 @@
 package handlers
 
 import (
-	"fmt"
+	"goth/internal/middleware"
 	"goth/internal/store"
 	"goth/internal/templates"
 	"net/http"
 	"strconv"
-    "time"
+	"time"
 	"github.com/go-chi/chi/v5"
 )
 
@@ -24,18 +24,22 @@ func NewPutTaskHandler(params PutTaskHandlerParams) *PutTaskHandler {
 	}
 }
 
-
 func (h *PutTaskHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
     time.Sleep(500 * time.Millisecond)
     description := r.FormValue("task")
-    fmt.Println("this is the new description "+description)
     idString := chi.URLParam(r, "id")
     idU32, err := strconv.ParseUint(idString, 10, 32)
 
     if err != nil { BadRequest(w, r); return}
 
     id := uint(idU32)
-    err = h.taskStore.EditTask(id, description)
+
+    sessionValue := r.Context().Value(middleware.SessionKey)
+    if sessionValue == nil { BadRequest(w, r); return}
+
+    sessionID := sessionValue.(string)
+
+    err = h.taskStore.EditTask(id, sessionID, description)
 
     if err != nil { BadRequest(w, r); return}
 

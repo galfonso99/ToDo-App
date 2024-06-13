@@ -3,8 +3,10 @@ package handlers
 import (
 	"goth/internal/store"
 	"goth/internal/templates"
+	"goth/internal/middleware"
 	"net/http"
 	"strconv"
+    // "fmt"
 )
 
 type PostTaskHandler struct {
@@ -22,9 +24,13 @@ func NewPostTaskHandler(params PostTaskHandlerParams) *PostTaskHandler {
 }
 
 func (h *PostTaskHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+    sessionID := r.Context().Value(middleware.SessionKey).(string)
 	description := r.FormValue("task")
 
-	ID, err := h.taskStore.CreateTask(description)
+	ID, err := h.taskStore.CreateTask(&store.Task{
+        SessionID: sessionID,
+        Description: description,
+    })
 
 	 if err != nil {
 
@@ -34,6 +40,7 @@ func (h *PostTaskHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	 	return
 	 }
     id := strconv.FormatUint(uint64(ID), 10)
+
 	// c := templates.TaskSuccess(description)
     newTask := templates.Task(id, description)
 	err = newTask.Render(r.Context(), w)

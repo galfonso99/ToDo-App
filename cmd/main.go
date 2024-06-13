@@ -61,11 +61,12 @@ func main() {
 			middleware.Logger,
 			m.TextHTMLMiddleware,
 			m.CSPMiddleware,
-			authMiddleware.AddUserToContext,
+			authMiddleware.AddSessionToContext,
 		)
 
 		r.Get("/", handlers.NewHomeHandler(handlers.HomeHandlerParams{
             TaskStore: taskStore,
+            SessionStore: sessionStore,
         }).ServeHTTP)
 
         r.Get("/todos/{id}", handlers.NewGetTaskHandler(handlers.GetTaskHandlerParams{

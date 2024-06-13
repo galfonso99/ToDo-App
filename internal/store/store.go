@@ -1,20 +1,21 @@
 package store
 
+
 type User struct {
-	ID       uint   `gorm:"primaryKey" json:"id"`
 	Email    string `json:"email"`
 	Password string `json:"-"`
+	ID       uint   `gorm:"primaryKey" json:"id"`
 }
 
 type Task struct {
-	ID       uint   `gorm:"primaryKey" json:"id"`
-	Description    string `json:"Description"` }
+	Description string `json:"Description"`
+	Session     Session
+	SessionID   string
+	ID          uint   `gorm:"primaryKey" json:"id"`
+}
 
 type Session struct {
-	ID        uint   `gorm:"primaryKey" json:"id"`
-	SessionID string `json:"session_id"`
-	UserID    uint   `json:"user_id"`
-	User      User   `gorm:"foreignKey:UserID" json:"user"`
+    ID string `gorm:"primaryKey" json:"session_id"`
 }
 
 type UserStore interface {
@@ -23,15 +24,15 @@ type UserStore interface {
 }
 
 type TaskStore interface {
-	CreateTask(description string) (uint, error)
-	GetTask(ID uint) (*Task, error)
+	CreateTask(task *Task) (uint, error)
+	GetTask(ID uint, sessionID string) (*Task, error)
     DeleteTask(ID uint) error
-    EditTask(ID uint, desc string) error
+    EditTask(ID uint, sessionID string, desc string) error
 	GetAllTasks() ([]Task, error)
+	GetTasksFromSession(sessionID string) ([]Task, error)
 }
 
 type SessionStore interface {
-	CreateSession(session *Session) (*Session, error)
-	GetUserFromSession(sessionID string, userID string) (*User, error)
+	CreateSession() (*Session, error)
     // GetTasksFromSession(sessionID string) ([]Task, error)
 }

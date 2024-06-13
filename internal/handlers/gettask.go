@@ -3,6 +3,7 @@ package handlers
 import (
 	"goth/internal/store"
 	"goth/internal/templates"
+	"goth/internal/middleware"
 	"net/http"
 	"github.com/go-chi/chi/v5"
 	"strconv"
@@ -33,10 +34,16 @@ func (h *GetTaskHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
     id := chi.URLParam(r, "id")
     u64, err := strconv.ParseUint(id, 10, 32)
 
+
     if err != nil { BadRequest(w, r); return}
 
+    sessionValue := r.Context().Value(middleware.SessionKey)
+    if sessionValue == nil { BadRequest(w, r); return}
+
+    sessionID := sessionValue.(string)
+
     ID := uint(u64)
-    task, err := h.taskStore.GetTask(ID)
+    task, err := h.taskStore.GetTask(ID, sessionID)
 
     if err != nil { BadRequest(w, r); return}
 
@@ -48,6 +55,3 @@ func (h *GetTaskHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
-
-
-

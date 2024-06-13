@@ -37,18 +37,18 @@ templ nav() {
 				</li>
 			</ol>
 			<ol class="flex space-x-4">
-				if middleware.GetUser(ctx) != nil {
-					<li>
-						<button class="text-gray-200" hx-post="/logout">Logout</button>
-					</li>
-				} else {
+				<!-- if middleware.GetUser(ctx) != nil {-->
+				<!-- 	<li>-->
+				<!-- 		<button class="text-gray-200" hx-post="/logout">Logout</button>-->
+				<!-- 	</li>-->
+				<!-- } else {-->
 					<li>
 						<a class="text-gray-200" href="/register">Register</a>
 					</li>
 					<li>
 						<a class="text-gray-200" href="/login">Login</a>
 					</li>
-				}
+				<!-- } -->
 			</ol>
 		</div>
 	</nav>

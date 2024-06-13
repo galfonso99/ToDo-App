@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"goth/internal/store"
 	"goth/internal/templates"
 	"net/http"
@@ -27,7 +26,6 @@ func NewDeleteTaskHandler(params DeleteTaskHandlerParams) *DeleteTaskHandler {
 func (h *DeleteTaskHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
     time.Sleep(500 * time.Millisecond)
     id := chi.URLParam(r, "id")
-    fmt.Println(id)
     u64, err := strconv.ParseUint(id, 10, 32)
 
     if err != nil {

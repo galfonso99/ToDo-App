@@ -156,22 +156,7 @@ func nav() templ.Component {
 			templ_7745c5c3_Var8 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<nav class=\"bg-primary-600 p-4\"><div class=\"container flex justify-between\"><ol class=\"flex space-x-4\"><li><a class=\"text-gray-200\" href=\"/\">Home</a></li><li><a class=\"text-gray-200\" href=\"/about\">About</a></li></ol><ol class=\"flex space-x-4\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		if middleware.GetUser(ctx) != nil {
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<li><button class=\"text-gray-200\" hx-post=\"/logout\">Logout</button></li>")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		} else {
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<li><a class=\"text-gray-200\" href=\"/register\">Register</a></li><li><a class=\"text-gray-200\" href=\"/login\">Login</a></li>")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</ol></div></nav>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<nav class=\"bg-primary-600 p-4\"><div class=\"container flex justify-between\"><ol class=\"flex space-x-4\"><li><a class=\"text-gray-200\" href=\"/\">Home</a></li><li><a class=\"text-gray-200\" href=\"/about\">About</a></li></ol><ol class=\"flex space-x-4\"><!-- if middleware.GetUser(ctx) != nil {--><!-- \t<li>--><!-- \t\t<button class=\"text-gray-200\" hx-post=\"/logout\">Logout</button>--><!-- \t</li>--><!-- } else {--><li><a class=\"text-gray-200\" href=\"/register\">Register</a></li><li><a class=\"text-gray-200\" href=\"/login\">Login</a></li><!-- } --></ol></div></nav>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

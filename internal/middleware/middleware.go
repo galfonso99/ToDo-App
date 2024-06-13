@@ -2,14 +2,15 @@ package middleware
 
 import (
 	"context"
-	"crypto/rand"
+	crand "crypto/rand"
 	b64 "encoding/base64"
 	"encoding/hex"
 	"fmt"
 	"goth/internal/store"
 	"log"
+    "math/rand/v2"
 	"net/http"
-	"strings"
+	// "strings"
 )
 
 type key string
@@ -25,11 +26,22 @@ type Nonces struct {
 
 func generateRandomString(length int) string {
 	bytes := make([]byte, length)
-	_, err := rand.Read(bytes)
+	_, err := crand.Read(bytes)
 	if err != nil {
 		return ""
 	}
 	return hex.EncodeToString(bytes)
+}
+
+func GenerateRandomStringOfNumbers(length int) string {
+    bytes := make([]byte, length)
+    for i := range length {
+        // Generate a random num using math/rand
+        newInt := rand.IntN(10)
+        intAsByte := byte(newInt) + byte('0')
+        bytes[i] = intAsByte
+    }
+	return string(bytes)
 }
 
 func CSPMiddleware(next http.Handler) http.Handler {
@@ -114,59 +126,84 @@ func NewAuthMiddleware(sessionStore store.SessionStore, sessionCookieName string
 	}
 }
 
-type UserContextKey string
+type SessionContextKey string
 
-var UserKey UserContextKey = "user"
+var SessionKey SessionContextKey = "session"
 
-func (m *AuthMiddleware) AddUserToContext(next http.Handler) http.Handler {
+func (m *AuthMiddleware) AddSessionToContext(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-		sessionCookie, err := r.Cookie(m.sessionCookieName)
+		// sessionCookie, err := r.Cookie(m.sessionCookieName)
+
+		sessionCookie, err := r.Cookie("session")
 
 		if err != nil {
 			fmt.Println("error getting session cookie", err)
 			next.ServeHTTP(w, r)
 			return
 		}
+        decodedValue, err := b64.StdEncoding.DecodeString(sessionCookie.Value)
 
-		decodedValue, err := b64.StdEncoding.DecodeString(sessionCookie.Value)
+        if err != nil {
+            next.ServeHTTP(w, r)
+            return
+        }
 
-		if err != nil {
-			next.ServeHTTP(w, r)
-			return
-		}
+        sessionID := string(decodedValue)
 
-		splitValue := strings.Split(string(decodedValue), ":")
+        ctx := context.WithValue(r.Context(), SessionKey, sessionID)
 
-		if len(splitValue) != 2 {
-			next.ServeHTTP(w, r)
-			return
-		}
-
-		sessionID := splitValue[0]
-		userID := splitValue[1]
-
-		fmt.Println("sessionID", sessionID)
-		fmt.Println("userID", userID)
-
-		user, err := m.sessionStore.GetUserFromSession(sessionID, userID)
-
-		if err != nil {
-			next.ServeHTTP(w, r)
-			return
-		}
-
-		ctx := context.WithValue(r.Context(), UserKey, user)
-
-		next.ServeHTTP(w, r.WithContext(ctx))
-	})
+        next.ServeHTTP(w, r.WithContext(ctx))
+    })
 }
 
-func GetUser(ctx context.Context) *store.User {
-	user := ctx.Value(UserKey)
-	if user == nil {
-		return nil
-	}
+// func (m *AuthMiddleware) AddUserToContext(next http.Handler) http.Handler {
+// 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+//
+// 		sessionCookie, err := r.Cookie(m.sessionCookieName)
+//
+// 		if err != nil {
+// 			fmt.Println("error getting session cookie", err)
+// 			next.ServeHTTP(w, r)
+// 			return
+// 		}
+//
+// 		decodedValue, err := b64.StdEncoding.DecodeString(sessionCookie.Value)
+//
+// 		if err != nil {
+// 			next.ServeHTTP(w, r)
+// 			return
+// 		}
+//
+// 		splitValue := strings.Split(string(decodedValue), ":")
+//
+// 		if len(splitValue) != 2 {
+// 			next.ServeHTTP(w, r)
+// 			return
+// 		}
+//
+// 		sessionID := splitValue[0]
+// 		userID := splitValue[1]
+//
+//
+// 		user, err := m.sessionStore.GetUserFromSession(sessionID, userID)
+//
+// 		if err != nil {
+// 			next.ServeHTTP(w, r)
+// 			return
+// 		}
+//
+// 		ctx := context.WithValue(r.Context(), UserKey, user)
+//
+// 		next.ServeHTTP(w, r.WithContext(ctx))
+// 	})
+// }
 
-	return user.(*store.User)
-}
+// func GetUser(ctx context.Context) *store.User {
+// 	user := ctx.Value(UserKey)
+// 	if user == nil {
+// 		return nil
+// 	}
+//
+// 	return user.(*store.User)
+// }

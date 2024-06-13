@@ -38,7 +38,7 @@ templ TaskEditor(id string, desc string) {
 
 templ Form() {
     <form hx-swap="outerHTML" hx-post="/todos" autocomplete="off">
-        <input class="py-3 px-3 min-w-[40vw]" type="text" id="task" name="task" placeholder="Enter Task">
+        <input class="py-3 px-3 min-w-[40vw] rounded-xl" type="text" id="task" name="task" placeholder="Enter Task">
         <button class="bg-blue-500 text-white py-2 px-5 my-5 mx-3 rounded-lg text-lg" >
             <input type="submit" value="Submit">
         </button>
@@ -62,6 +62,7 @@ templ todo(id string, task string) {
             hx-indicator={"#ci-"+id}
             class="w-6 shrink-0 inline-block"
             style="cursor:pointer"
+            onclick=""
             >
                 <img src="/static/images/trash.svg" alt="loading">
         </div>

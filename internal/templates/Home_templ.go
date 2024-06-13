@@ -226,7 +226,7 @@ func Form() templ.Component {
 			templ_7745c5c3_Var12 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<form hx-swap=\"outerHTML\" hx-post=\"/todos\" autocomplete=\"off\"><input class=\"py-3 px-3 min-w-[40vw]\" type=\"text\" id=\"task\" name=\"task\" placeholder=\"Enter Task\"> <button class=\"bg-blue-500 text-white py-2 px-5 my-5 mx-3 rounded-lg text-lg\"><input type=\"submit\" value=\"Submit\"></button></form>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<form hx-swap=\"outerHTML\" hx-post=\"/todos\" autocomplete=\"off\"><input class=\"py-3 px-3 min-w-[40vw] rounded-xl\" type=\"text\" id=\"task\" name=\"task\" placeholder=\"Enter Task\"> <button class=\"bg-blue-500 text-white py-2 px-5 my-5 mx-3 rounded-lg text-lg\"><input type=\"submit\" value=\"Submit\"></button></form>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -380,14 +380,14 @@ func todo(id string, task string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" class=\"w-6 shrink-0 inline-block\" style=\"cursor:pointer\"><img src=\"/static/images/trash.svg\" alt=\"loading\"></div><div id=\"")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" class=\"w-6 shrink-0 inline-block\" style=\"cursor:pointer\" onclick=\"\"><img src=\"/static/images/trash.svg\" alt=\"loading\"></div><div id=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var24 string
 		templ_7745c5c3_Var24, templ_7745c5c3_Err = templ.JoinStringErrs("ci-" + id)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/templates/Home.templ`, Line: 68, Col: 25}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/templates/Home.templ`, Line: 69, Col: 25}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var24))
 		if templ_7745c5c3_Err != nil {
